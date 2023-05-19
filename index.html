@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+  <title>Table Example</title>
+  <style>
+    .box {
+      width: 120px;
+      height: 100px;
+      border: 1px solid black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 24px;
+    }
+    
+    .box-1 {
+      background-color: red;
+    }
+    
+    .box-2 {
+      background-color: blue;
+    }
+    
+    .box-3 {
+      background-color: green;
+    }
+
+    .box-4 {
+      background-color: yellow;
+    }
+    
+    .box-5 {
+      background-color:darkgray;
+    }
+    
+    .box-6 {
+      background-color: cyan;
+    }
+
+    .box-7 {
+      background-color: indianred;
+    }
+    
+    .box-8 {
+      background-color: rgb(76, 76, 131);
+    }
+    
+    .box-9 {
+      background-color: rgb(175, 223, 175);
+    }
+    .undo-button {
+            margin-top: 10px;
+        }
+    /* Add more classes and colors for additional boxes */
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var sourceCell = null;
+
+        // Event listener for when a box is dragged
+        function dragStart(event) {
+            sourceCell = event.target.parentElement;
+            event.dataTransfer.setData("text/plain", event.target.id);
+        }
+
+        // Event listener for when a box is being dragged over a cell
+        function dragOver(event) {
+            event.preventDefault();
+        }
+
+        // Event listener for when a box is dropped onto a cell
+        function drop(event) {
+            event.preventDefault();
+            var data = event.dataTransfer.getData("text/plain");
+            var targetCell = event.target.parentElement;
+
+            // Swap the boxes between source and target cells
+            if (sourceCell !== targetCell) {
+                var sourceBox = sourceCell.querySelector(".box");
+                var targetBox = targetCell.querySelector(".box");
+
+                sourceCell.removeChild(sourceBox);
+                targetCell.removeChild(targetBox);
+                sourceCell.appendChild(targetBox);
+                targetCell.appendChild(sourceBox);
+            }
+
+            event.target.style.opacity = "1"; // Restore original opacity
+        }
+
+        function undo() {
+                if (previousState) {
+                    var targetCell = sourceCell;
+                    targetCell.innerHTML = previousState;
+                    previousState = null;
+                }
+            }
+
+        // Attach event listeners to the boxes
+        var boxes = document.querySelectorAll(".box");
+        boxes.forEach(function(box) {
+            box.addEventListener("dragstart", dragStart);
+            box.addEventListener("dragover", dragOver);
+            box.addEventListener("drop", drop);
+            box.setAttribute("draggable", "true");
+        });
+
+         // Attach event listener to the undo button
+            var undoButton = document.getElementById("undo-button");
+            undoButton.addEventListener("click", undo);
+    });
+</script>
+</head>
+<body>
+  <table>
+    <tr>
+      <td><div class="box box-1" draggable="true">100</div></td>
+      <td><div class="box box-2" draggable="true">200</div></td>
+      <td><div class="box box-3" draggable="true">300</div></td>
+    </tr>
+    <tr>
+      <td><div class="box box-4" draggable="true">400</div></td>
+      <td><div class="box box-5" draggable="true">500</div></td>
+      <td><div class="box box-6" draggable="true">600</div></td>
+    </tr>
+    <tr>
+      <td><div class="box box-7" draggable="true">700</div></td>
+      <td><div class="box box-8" draggable="true">800</div></td>
+      <td><div class="box box-9" draggable="true">900</div></td>
+    </tr>
+  </table>
+  <button id="undo-button" class="undo-button">Undo</button>
+</body>
+
+</html>
